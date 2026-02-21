@@ -1,0 +1,12 @@
+@media screen and (min-width: 500px) and (max-width: 639px) {
+    body {
+        width: 85%;
+        margin-inline: auto;
+    }
+    .website-name {
+        font-size: 30px;
+    }
+    .dashboard-card p {
+        text-align: center;
+    }
+}
