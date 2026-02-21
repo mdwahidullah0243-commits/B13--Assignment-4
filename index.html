@@ -51,7 +51,7 @@
                 <p class="text-[#323B49] font-semibold text-xl">
                     Total
                 </p>
-                <p class="text-[#002C5C] font-semibold text-lg">
+                <p id="total" class="text-[#002C5C] font-semibold text-lg">
                     0
                 </p>
             </div>
@@ -61,7 +61,7 @@
                 <p class="text-[#323B49] font-semibold text-xl">
                     Interview
                 </p>
-                <p class="text-success font-semibold text-lg">
+                <p id="interviewCount" class="text-success font-semibold text-lg">
                     0
                 </p>
             </div>
@@ -71,7 +71,7 @@
                 <p class="text-[#323B49] font-semibold text-xl">
                     Rejected
                 </p>
-                <p class="text-error font-semibold text-lg">
+                <p id="rejectCount" class="text-error font-semibold text-lg">
                     0
                 </p>
             </div>
@@ -93,9 +93,9 @@
 
         <!-- 3 different tab -->
         <div class="mt-4 flex gap-3">
-            <button class="btn btn-info">All</button>
-            <button class="btn">Interview</button>
-            <button class="btn">Rejected</button>
+            <button onclick="toggleStyle('all-filter-btn')" id="all-filter-btn" class="btn btn-info">All</button>
+            <button onclick="toggleStyle('interview-filter-btn')" id="interview-filter-btn" class="btn">Interview</button>
+            <button onclick="toggleStyle('rejected-filter-btn')" id="rejected-filter-btn" class="btn">Rejected</button>
         </div>
 
         <!-- job cards section -->
@@ -128,8 +128,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -166,8 +166,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -204,8 +204,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -242,8 +242,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -280,8 +280,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -318,8 +318,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -356,8 +356,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -394,8 +394,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -432,8 +432,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -470,8 +470,8 @@
                     </p>
 
                     <div class="space-x-2 mt-5">
-                        <button class="btn btn-outline btn-success">INTERVIEW</button>
-                        <button class="btn btn-outline btn-error">REJECTED</button>
+                        <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                        <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
                     </div>
                 </div>
 
@@ -482,6 +482,13 @@
             </div>
         </section>
     </main>
+
+    <section id="filtered-section" class="hidden border border-gray-200 py-20 rounded-xl">
+        
+    </section>
+
+
+    <script src="./jobTracker.js"></script>
 </body>
 
 </html>
