@@ -87,14 +87,14 @@
         <div class="flex justify-between items-center">
             <h3 class="text-2xl font-medium text-[#002C5C]">Available Jobs</h3>
             <p class="text-lg text-[#64748B] font-medium">
-                <span>0</span> jobs
+                <span id="jobs-count">0</span> jobs
             </p>
         </div>
 
         <!-- 3 different tab -->
         <div class="mt-4 flex gap-3">
             <button onclick="toggleStyle('all-filter-btn')" id="all-filter-btn" class="btn btn-info">All</button>
-            <button onclick="toggleStyle('interview-filter-btn')" id="interview-filter-btn" class="btn">Interview</button>
+            <button onclick="calculateCount('interview-filter-btn'); toggleStyle('interview-filter-btn')" id="interview-filter-btn" class="btn">Interview</button>
             <button onclick="toggleStyle('rejected-filter-btn')" id="rejected-filter-btn" class="btn">Rejected</button>
         </div>
 
@@ -481,7 +481,9 @@
                 </button>
             </div>
         </section>
-        
+
+
+        <!-- filtered section  -->
         <section id="filtered-section" class="hidden space-y-5 border border-gray-200 py-20 rounded-xl">
             
         </section>

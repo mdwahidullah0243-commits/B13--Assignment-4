@@ -1,4 +1,6 @@
-/**Problem Solving Stage of This Project <==> My Stage 
+
+/** My thinking stage of this project <==> Problem Solving Stage of This Project   
+ 
  * Stage: 1 ==> dashboard calculate
  * Stage: 2 ==> toggle style applied into 3 different buttons tab
  * Stage: 3 ==> hidden all card when clicked others tab 
@@ -8,6 +10,8 @@
  * Stage: 7 ==> Assigning the same card from one box to another
  * Stage: 8 ==> If there is anything in the list, this function will be called.
  * Stage: 9 ==> re-render the filtered section after replace the job card
+ * Stage: 10 ==> update jobs count, calculate the length of clicked filtered section
+
 */
 
 
@@ -20,14 +24,15 @@ const allJobCards = document.getElementById('all-job-cards');
 
 const filterSection = document.getElementById('filtered-section');
 
+let jobsCount = document.getElementById('jobs-count');
+
+let total = document.getElementById('total');
+const interviewCount = document.getElementById('interviewCount');
+const rejectCount = document.getElementById('rejectCount');
 
 // Stage: 1 ==> dashboard calculate
 
-function calculateCount() {
-    const total = document.getElementById('total');
-    const interviewCount = document.getElementById('interviewCount');
-    const rejectCount = document.getElementById('rejectCount');
-
+function calculateCount(id) {
     total.textContent = allJobCards.children.length;
     interviewCount.textContent = interviewList.length;
     rejectCount.textContent = rejectedList.length;
@@ -84,6 +89,16 @@ function toggleStyle(id) {
 
             filterSection.classList.remove('border', 'py-20', 'rounded-xl');
             renderInterview();
+
+
+            // Stage: 10 ==> calculate the length of interview filtered section
+
+            // manually
+            // jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
+            
+            // call the packet
+            updateJobsCount();
+
         }
 
     } else if (id === 'rejected-filter-btn') {
@@ -111,12 +126,29 @@ function toggleStyle(id) {
             // Stage: 8 ==> If there is anything in the list, this function will be called.
 
             filterSection.classList.remove('border', 'py-20', 'rounded-xl');
-            renderRejected()
+            renderRejected();
+
+
+            // Stage: 10 ==> calculate the length of rejected filtered section
+
+            // manually
+            // jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
+
+            // call the packet
+            updateJobsCount()
         }
 
-    } else if (id === 'all-filter-btn') {
+    } else {
         filterSection.classList.add('hidden');
         allJobCards.classList.remove('hidden');
+
+        // Stage: 10 ==> calculate the length of all filtered section
+
+        // manually 
+        // jobsCount.innerHTML = `${total.textContent}`;
+
+        // call the packet 
+        updateJobsCount();
     }
 }
 
@@ -160,7 +192,7 @@ mainContainer.addEventListener('click', function (event) {
         // Stage: 7 ==> Assigning the same card from one box to another
         rejectedList = rejectedList.filter(job => job.companyName !== jobInfo.companyName);
 
-        
+
         // Stage: 9 ==> re-render the filtered section after replace the job card 
 
         if (currentStatus === 'rejected-filter-btn') {
@@ -174,8 +206,14 @@ mainContainer.addEventListener('click', function (event) {
                         </p>
                     </div>
                 `;
+
+                jobsCount.innerHTML = `0 of ${total.textContent}`;
+
             } else {
                 renderRejected();
+                
+                // jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
+                updateJobsCount();
             }
         }
 
@@ -219,22 +257,28 @@ mainContainer.addEventListener('click', function (event) {
         // Stage: 7 ==> Assigning the same card from one box to another
         interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName);
 
-        
+
         // Stage: 9 ==> re-render the filtered section after replace the job card 
 
         if (currentStatus === 'interview-filter-btn') {
             if (interviewList.length === 0) {
                 filterSection.innerHTML = `
-            <div class="flex flex-col items-center gap-2">
-                <img src="./assests/doc-file.png" alt="">
-                <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
-                <p class="text-[#64748B] text-base font-normal">
-                    Check back soon for new job opportunities
-                </p>
-            </div>
-        `;
+                    <div class="flex flex-col items-center gap-2">
+                        <img src="./assests/doc-file.png" alt="">
+                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                        <p class="text-[#64748B] text-base font-normal">
+                            Check back soon for new job opportunities
+                        </p>
+                    </div>
+                `;
+
+                jobsCount.innerHTML = `0 of ${total.textContent}`;
+
             } else {
                 renderInterview();
+
+                // jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
+                updateJobsCount();
             }
         }
 
@@ -334,5 +378,17 @@ function renderRejected() {
         `;
 
         filterSection.appendChild(div);
+    }
+}
+
+function updateJobsCount() {
+    if(currentStatus === 'interview-filter-btn') {
+        jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
+
+    } else if(currentStatus === 'rejected-filter-btn') {
+        jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
+
+    } else {
+        jobsCount.innerHTML = `${total.textContent}`;
     }
 }
