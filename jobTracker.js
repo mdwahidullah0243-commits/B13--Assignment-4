@@ -7,11 +7,13 @@
  * Stage: 6 ==> The dashboard is adding 1 each time you click the button
  * Stage: 7 ==> Assigning the same card from one box to another
  * Stage: 8 ==> If there is anything in the list, this function will be called.
+ * Stage: 9 ==> re-render the filtered section after replace the job card
 */
 
 
 let interviewList = [];
 let rejectedList = [];
+let currentStatus = null;
 
 const mainContainer = document.querySelector('main');
 const allJobCards = document.getElementById('all-job-cards');
@@ -35,6 +37,7 @@ calculateCount();
 
 
 function toggleStyle(id) {
+    currentStatus = id;
 
     // Stage: 2 ==> toggle style applied into 3 different buttons tab
 
@@ -157,6 +160,25 @@ mainContainer.addEventListener('click', function (event) {
         // Stage: 7 ==> Assigning the same card from one box to another
         rejectedList = rejectedList.filter(job => job.companyName !== jobInfo.companyName);
 
+        
+        // Stage: 9 ==> re-render the filtered section after replace the job card 
+
+        if (currentStatus === 'rejected-filter-btn') {
+            if (rejectedList.length === 0) {
+                filterSection.innerHTML = `
+                    <div class="flex flex-col items-center gap-2">
+                        <img src="./assests/doc-file.png" alt="">
+                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                        <p class="text-[#64748B] text-base font-normal">
+                            Check back soon for new job opportunities
+                        </p>
+                    </div>
+                `;
+            } else {
+                renderRejected();
+            }
+        }
+
         calculateCount()
 
     } else if (event.target.classList.contains('rejected-btn')) {
@@ -195,7 +217,26 @@ mainContainer.addEventListener('click', function (event) {
         }
 
         // Stage: 7 ==> Assigning the same card from one box to another
-        interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName)
+        interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName);
+
+        
+        // Stage: 9 ==> re-render the filtered section after replace the job card 
+
+        if (currentStatus === 'interview-filter-btn') {
+            if (interviewList.length === 0) {
+                filterSection.innerHTML = `
+            <div class="flex flex-col items-center gap-2">
+                <img src="./assests/doc-file.png" alt="">
+                <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                <p class="text-[#64748B] text-base font-normal">
+                    Check back soon for new job opportunities
+                </p>
+            </div>
+        `;
+            } else {
+                renderInterview();
+            }
+        }
 
         calculateCount()
     }
