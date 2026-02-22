@@ -11,6 +11,8 @@
  * Stage: 8 ==> If there is anything in the list, this function will be called.
  * Stage: 9 ==> re-render the filtered section after replace the job card
  * Stage: 10 ==> update jobs count, calculate the length of clicked filtered section
+ * Stage: 11 ==> remove the job card when clicked on the delete button 
+                and show No job available card when will 0 the length of filtered section
 
 */
 
@@ -21,26 +23,31 @@ let currentStatus = null;
 
 const mainContainer = document.querySelector('main');
 const allJobCards = document.getElementById('all-job-cards');
+const jobCardListOfAllJobCards = allJobCards.children;
 
 const filterSection = document.getElementById('filtered-section');
 
 let jobsCount = document.getElementById('jobs-count');
-jobsCount.textContent = allJobCards.children.length;
+jobsCount.textContent = jobCardListOfAllJobCards.length;
 
 let total = document.getElementById('total');
-const interviewCount = document.getElementById('interviewCount');
-const rejectCount = document.getElementById('rejectCount');
+let interviewCount = document.getElementById('interviewCount');
+let rejectCount = document.getElementById('rejectCount');
 
 // Stage: 1 ==> dashboard calculate
 
-function calculateCount(id) {
-    total.textContent = allJobCards.children.length;
+function calculateCount() {
+    total.textContent = jobCardListOfAllJobCards.length;
     interviewCount.textContent = interviewList.length;
     rejectCount.textContent = rejectedList.length;
 }
 
 calculateCount();
 
+// delete button purpose: By default selected the All-filter tab
+window.addEventListener('DOMContentLoaded', function () {
+    toggleStyle('all-filter-btn');
+});
 
 function toggleStyle(id) {
     currentStatus = id;
@@ -96,7 +103,7 @@ function toggleStyle(id) {
 
             // manually
             // jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
-            
+
             // call the packet
             updateJobsCount();
 
@@ -139,7 +146,7 @@ function toggleStyle(id) {
             updateJobsCount()
         }
 
-    } else if('all-filter-btn') {
+    } else if (id === 'all-filter-btn') {
         filterSection.classList.add('hidden');
         allJobCards.classList.remove('hidden');
 
@@ -155,7 +162,56 @@ function toggleStyle(id) {
 
 
 mainContainer.addEventListener('click', function (event) {
-    if (event.target.classList.contains('interview-btn')) {
+    if (event.target.classList.contains('delete-icon')) {
+        // Stage: 11 ==> remove the job card when clicked on the delete button and show No job available card when will be 0 the length of filtered section
+
+        if (currentStatus === 'all-filter-btn') {
+
+            const jobCard = event.target.closest('.job-card');
+            allJobCards.removeChild(jobCard);
+
+            jobCardListOfAllJobCards.length--;
+
+            calculateCount();
+            updateJobsCount();
+
+            if (jobCardListOfAllJobCards.length === 0) {
+                allJobCards.className = filteredClassName();
+                allJobCards.innerHTML = noJobsAvailableCard();
+            }
+
+        } else if (currentStatus === 'interview-filter-btn') {
+
+            const interviewCard = event.target.closest('.job-card');
+            filterSection.removeChild(interviewCard);
+
+            interviewList.length--;
+
+            calculateCount();
+            updateJobsCount();
+
+            if (interviewList.length === 0) {
+                filterSection.className = filteredClassName();
+                filterSection.innerHTML = noJobsAvailableCard();
+            }
+
+        } else if (currentStatus === 'rejected-filter-btn') {
+
+            const rejectedCard = event.target.closest('.job-card');
+            filterSection.removeChild(rejectedCard);
+
+            rejectedList.length--;
+
+            calculateCount();
+            updateJobsCount();
+
+            if (rejectedList.length === 0) {
+                filterSection.className = filteredClassName();
+                filterSection.innerHTML = noJobsAvailableCard();
+            }
+        }
+
+    } else if (event.target.classList.contains('interview-btn')) {
         const jobCard = event.target.closest('.job-card');
 
         const companyName = jobCard.querySelector('.companyName').innerText;
@@ -195,31 +251,9 @@ mainContainer.addEventListener('click', function (event) {
 
 
         // Stage: 9 ==> re-render the filtered section after replace the job card 
+        reRenderFilterSection();
 
-        if (currentStatus === 'rejected-filter-btn') {
-            if (rejectedList.length === 0) {
-                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
-                filterSection.innerHTML = `
-                    <div class="flex flex-col items-center gap-2">
-                        <img src="./assests/doc-file.png" alt="">
-                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
-                        <p class="text-[#64748B] text-base font-normal">
-                            Check back soon for new job opportunities
-                        </p>
-                    </div>
-                `;
-
-                jobsCount.innerHTML = `0 of ${total.textContent}`;
-
-            } else {
-                renderRejected();
-                
-                // jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
-                updateJobsCount();
-            }
-        }
-
-        calculateCount()
+        calculateCount();
 
     } else if (event.target.classList.contains('rejected-btn')) {
         const jobCard = event.target.closest('.job-card');
@@ -261,31 +295,9 @@ mainContainer.addEventListener('click', function (event) {
 
 
         // Stage: 9 ==> re-render the filtered section after replace the job card 
+        reRenderFilterSection();
 
-        if (currentStatus === 'interview-filter-btn') {
-            if (interviewList.length === 0) {
-                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
-                filterSection.innerHTML = `
-                    <div class="flex flex-col items-center gap-2">
-                        <img src="./assests/doc-file.png" alt="">
-                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
-                        <p class="text-[#64748B] text-base font-normal">
-                            Check back soon for new job opportunities
-                        </p>
-                    </div>
-                `;
-
-                jobsCount.innerHTML = `0 of ${total.textContent}`;
-
-            } else {
-                renderInterview();
-
-                // jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
-                updateJobsCount();
-            }
-        }
-
-        calculateCount()
+        calculateCount();
     }
 });
 
@@ -329,13 +341,13 @@ function renderInterview() {
 
             <!-- main part 2 -->
             <button class="btn btn-circle text-xl">
-                <i class="fa-solid fa-trash-can"></i>
+                <i class="delete-icon fa-solid fa-trash-can"></i>
             </button>
         `;
 
         filterSection.appendChild(div);
     }
-}
+};
 
 function renderRejected() {
     filterSection.innerHTML = ''
@@ -376,22 +388,87 @@ function renderRejected() {
 
             <!-- main part 2 -->
             <button class="btn btn-circle text-xl">
-                <i class="fa-solid fa-trash-can"></i>
+                <i class="delete-icon fa-solid fa-trash-can"></i>
             </button>
         `;
 
         filterSection.appendChild(div);
     }
-}
+};
 
 function updateJobsCount() {
-    if(currentStatus === 'interview-filter-btn') {
+    if (currentStatus === 'interview-filter-btn') {
         jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
 
-    } else if(currentStatus === 'rejected-filter-btn') {
+    } else if (currentStatus === 'rejected-filter-btn') {
         jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
 
-    } else if('all-filter-btn') {
+    } else if ('all-filter-btn') {
         jobsCount.innerHTML = `${total.textContent}`;
     }
+};
+
+function reRenderFilterSection() {
+    if (currentStatus === 'rejected-filter-btn') {
+        if (rejectedList.length === 0) {
+            filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
+            filterSection.innerHTML = `
+                    <div class="flex flex-col items-center gap-2">
+                        <img src="./assests/doc-file.png" alt="">
+                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                        <p class="text-[#64748B] text-base font-normal">
+                            Check back soon for new job opportunities
+                        </p>
+                    </div>
+                `;
+
+            jobsCount.innerHTML = `0 of ${total.textContent}`;
+
+        } else {
+            renderRejected();
+
+            // jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
+            updateJobsCount();
+        }
+
+    } else if (currentStatus === 'interview-filter-btn') {
+        if (interviewList.length === 0) {
+            filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
+            filterSection.innerHTML = `
+                    <div class="flex flex-col items-center gap-2">
+                        <img src="./assests/doc-file.png" alt="">
+                        <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                        <p class="text-[#64748B] text-base font-normal">
+                            Check back soon for new job opportunities
+                        </p>
+                    </div>
+                `;
+
+            jobsCount.innerHTML = `0 of ${total.textContent}`;
+
+        } else {
+            renderInterview();
+
+            // jobsCount.innerHTML = `${interviewList.length} of ${total.textContent}`;
+            updateJobsCount();
+        }
+    }
+};
+
+function noJobsAvailableCard() {
+    const card = `
+                <div class="flex flex-col items-center gap-2">
+                    <img src="./assests/doc-file.png" alt="">
+                    <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
+                    <p class="text-[#64748B] text-base font-normal">
+                        Check back soon for new job opportunities
+                    </p>
+                </div>
+            `;
+    return card;
+};
+
+function filteredClassName() {
+    const className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
+    return className;
 }
