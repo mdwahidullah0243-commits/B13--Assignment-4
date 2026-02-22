@@ -25,6 +25,7 @@ const allJobCards = document.getElementById('all-job-cards');
 const filterSection = document.getElementById('filtered-section');
 
 let jobsCount = document.getElementById('jobs-count');
+jobsCount.textContent = allJobCards.children.length;
 
 let total = document.getElementById('total');
 const interviewCount = document.getElementById('interviewCount');
@@ -138,7 +139,7 @@ function toggleStyle(id) {
             updateJobsCount()
         }
 
-    } else {
+    } else if('all-filter-btn') {
         filterSection.classList.add('hidden');
         allJobCards.classList.remove('hidden');
 
@@ -197,6 +198,7 @@ mainContainer.addEventListener('click', function (event) {
 
         if (currentStatus === 'rejected-filter-btn') {
             if (rejectedList.length === 0) {
+                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
                 filterSection.innerHTML = `
                     <div class="flex flex-col items-center gap-2">
                         <img src="./assests/doc-file.png" alt="">
@@ -262,6 +264,7 @@ mainContainer.addEventListener('click', function (event) {
 
         if (currentStatus === 'interview-filter-btn') {
             if (interviewList.length === 0) {
+                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
                 filterSection.innerHTML = `
                     <div class="flex flex-col items-center gap-2">
                         <img src="./assests/doc-file.png" alt="">
@@ -388,7 +391,7 @@ function updateJobsCount() {
     } else if(currentStatus === 'rejected-filter-btn') {
         jobsCount.innerHTML = `${rejectedList.length} of ${total.textContent}`;
 
-    } else {
+    } else if('all-filter-btn') {
         jobsCount.innerHTML = `${total.textContent}`;
     }
 }
