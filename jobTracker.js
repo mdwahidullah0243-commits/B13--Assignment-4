@@ -79,8 +79,8 @@ function toggleStyle(id) {
         } else {
             // Stage: 8 ==> If there is anything in the list, this function will be called.
 
-            // filterSection.classList.remove('border', 'py-20', 'rounded-xl');
-            // renderInterview();
+            filterSection.classList.remove('border', 'py-20', 'rounded-xl');
+            renderInterview();
         }
 
     } else if (id === 'rejected-filter-btn') {
@@ -107,8 +107,8 @@ function toggleStyle(id) {
         } else {
             // Stage: 8 ==> If there is anything in the list, this function will be called.
 
-            // filterSection.classList.remove('border', 'py-20', 'rounded-xl');
-            // renderRejected()
+            filterSection.classList.remove('border', 'py-20', 'rounded-xl');
+            renderRejected()
         }
 
     } else if (id === 'all-filter-btn') {
@@ -155,7 +155,7 @@ mainContainer.addEventListener('click', function (event) {
         }
 
         // Stage: 7 ==> Assigning the same card from one box to another
-        // rejectedList = rejectedList.filter(job => job.companyName !== jobInfo.companyName);
+        rejectedList = rejectedList.filter(job => job.companyName !== jobInfo.companyName);
 
         calculateCount()
 
@@ -195,7 +195,7 @@ mainContainer.addEventListener('click', function (event) {
         }
 
         // Stage: 7 ==> Assigning the same card from one box to another
-        // interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName)
+        interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName)
 
         calculateCount()
     }
