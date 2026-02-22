@@ -13,7 +13,8 @@
  * Stage: 10 ==> update jobs count, calculate the length of clicked filtered section
  * Stage: 11 ==> remove the job card when clicked on the delete button 
                 and show No job available card when will 0 the length of filtered section
-
+ * Stage: 12 ==> created a common function for repetitive tasks
+                
 */
 
 
@@ -44,10 +45,13 @@ function calculateCount() {
 
 calculateCount();
 
-// delete button purpose: By default selected the All-filter tab
+
+// delete button purpose ==> By default, the All-filter tab is selected
+
 window.addEventListener('DOMContentLoaded', function () {
     toggleStyle('all-filter-btn');
 });
+
 
 function toggleStyle(id) {
     currentStatus = id;
@@ -82,13 +86,7 @@ function toggleStyle(id) {
 
             const div = document.createElement('div');
             div.className = 'flex flex-col items-center gap-2';
-            div.innerHTML = `
-                <img src="./assests/doc-file.png" alt="">
-                <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
-                <p class="text-[#64748B] text-base font-normal">
-                    Check back soon for new job opportunities
-                </p>
-            `;
+            div.innerHTML = noJobsAvailableCard();
 
             filterSection.appendChild(div);
 
@@ -120,13 +118,7 @@ function toggleStyle(id) {
 
             const div = document.createElement('div');
             div.className = 'flex flex-col items-center gap-2';
-            div.innerHTML = `
-                <img src="./assests/doc-file.png" alt="">
-                <h3 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h3>
-                <p class="text-[#64748B] text-base font-normal">
-                    Check back soon for new job opportunities
-                </p>
-            `;
+            div.innerHTML = noJobsAvailableCard();
 
             filterSection.appendChild(div);
 
@@ -176,7 +168,7 @@ mainContainer.addEventListener('click', function (event) {
             updateJobsCount();
 
             if (jobCardListOfAllJobCards.length === 0) {
-                allJobCards.className = filteredClassName();
+                allJobCards.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
                 allJobCards.innerHTML = noJobsAvailableCard();
             }
 
@@ -191,7 +183,7 @@ mainContainer.addEventListener('click', function (event) {
             updateJobsCount();
 
             if (interviewList.length === 0) {
-                filterSection.className = filteredClassName();
+                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
                 filterSection.innerHTML = noJobsAvailableCard();
             }
 
@@ -206,7 +198,7 @@ mainContainer.addEventListener('click', function (event) {
             updateJobsCount();
 
             if (rejectedList.length === 0) {
-                filterSection.className = filteredClassName();
+                filterSection.className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
                 filterSection.innerHTML = noJobsAvailableCard();
             }
         }
@@ -467,8 +459,3 @@ function noJobsAvailableCard() {
             `;
     return card;
 };
-
-function filteredClassName() {
-    const className = 'mt-5 space-y-5 border border-gray-200 py-20 rounded-xl';
-    return className;
-}
