@@ -1,13 +1,17 @@
-/**Problem Solving of This Project <==> My Stage 
+/**Problem Solving Stage of This Project <==> My Stage 
  * Stage: 1 ==> dashboard calculate
  * Stage: 2 ==> toggle style applied into 3 different buttons tab
  * Stage: 3 ==> hidden all card when clicked others tab 
  * Stage: 4 ==> applied default display on between interview & rejected tab
+ * Stage: 5 ==> modified the status
+ * Stage: 6 ==> The dashboard is adding 1 each time you click the button
+ * Stage: 7 ==> Assigning the same card from one box to another
+ * Stage: 8 ==> If there is anything in the list, this function will be called.
 */
 
 
-const interviewList = [];
-const rejectedList = [];
+let interviewList = [];
+let rejectedList = [];
 
 const mainContainer = document.querySelector('main');
 const allJobCards = document.getElementById('all-job-cards');
@@ -71,7 +75,14 @@ function toggleStyle(id) {
             `;
 
             filterSection.appendChild(div);
+
+        } else {
+            // Stage: 8 ==> If there is anything in the list, this function will be called.
+
+            // filterSection.classList.remove('border', 'py-20', 'rounded-xl');
+            // renderInterview();
         }
+
     } else if (id === 'rejected-filter-btn') {
         allJobCards.classList.add('hidden');
         filterSection.classList.remove('hidden');
@@ -92,7 +103,14 @@ function toggleStyle(id) {
             `;
 
             filterSection.appendChild(div);
+
+        } else {
+            // Stage: 8 ==> If there is anything in the list, this function will be called.
+
+            // filterSection.classList.remove('border', 'py-20', 'rounded-xl');
+            // renderRejected()
         }
+
     } else if (id === 'all-filter-btn') {
         filterSection.classList.add('hidden');
         allJobCards.classList.remove('hidden');
@@ -100,10 +118,180 @@ function toggleStyle(id) {
 }
 
 
-// Stage ==>
+mainContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('interview-btn')) {
+        const jobCard = event.target.closest('.job-card');
 
-// mainContainer.addEventListener('click', function(event) {
-//     if(event.target.classList.contains('interview-btn')) {
-//         console.log('Clicked!');
-//     }
-// });
+        const companyName = jobCard.querySelector('.companyName').innerText;
+        const position = jobCard.querySelector('.position').innerText;
+        const location = jobCard.querySelector('.location').innerText;
+        const type = jobCard.querySelector('.type').innerText;
+        const salary = jobCard.querySelector('.salary').innerText;
+        const description = jobCard.querySelector('.job-description').innerText;
+
+        // Stage: 5 ==> modified the status
+
+        let status = jobCard.querySelector('.job-status');
+        status.innerText = 'INTERVIEW';
+        status.classList.remove('text-[#002C5C]', 'bg-gray-300', 'w-[150px]', 'w-[110px]', 'bg-red-500');
+        status.classList.add('text-white', 'w-[130px]', 'bg-green-500', 'font-medium');
+
+        const jobInfo = {
+            companyName,
+            position,
+            location,
+            type,
+            salary,
+            status: 'INTERVIEW',
+            description
+        }
+
+
+        // Stage: 6 ==> The dashboard is adding 1 each time you click the button
+
+        const existJobCard = interviewList.find(job => job.companyName === jobInfo.companyName);
+        if (!existJobCard) {
+            interviewList.push(jobInfo);
+        }
+
+        // Stage: 7 ==> Assigning the same card from one box to another
+        // rejectedList = rejectedList.filter(job => job.companyName !== jobInfo.companyName);
+
+        calculateCount()
+
+    } else if (event.target.classList.contains('rejected-btn')) {
+        const jobCard = event.target.closest('.job-card');
+
+        const companyName = jobCard.querySelector('.companyName').innerText;
+        const position = jobCard.querySelector('.position').innerText;
+        const location = jobCard.querySelector('.location').innerText;
+        const type = jobCard.querySelector('.type').innerText;
+        const salary = jobCard.querySelector('.salary').innerText;
+        const description = jobCard.querySelector('.job-description').innerText;
+
+        // Stage: 5 ==> modified the status
+
+        let status = jobCard.querySelector('.job-status');
+        status.innerText = 'REJECTED';
+        status.classList.remove('text-[#002C5C]', 'bg-gray-300', 'w-[150px]', 'w-[130px]', 'bg-green-500');
+        status.classList.add('text-white', 'w-[110px]', 'bg-red-500', 'font-medium');
+
+        const jobInfo = {
+            companyName,
+            position,
+            location,
+            type,
+            salary,
+            status: 'REJECTED',
+            description
+        }
+
+
+        // Stage: 6 ==> The dashboard is adding 1 each time you click the button
+
+        const existJobCard = rejectedList.find(job => job.companyName === jobInfo.companyName);
+        if (!existJobCard) {
+            rejectedList.push(jobInfo);
+        }
+
+        // Stage: 7 ==> Assigning the same card from one box to another
+        // interviewList = interviewList.filter(job => job.companyName !== jobInfo.companyName)
+
+        calculateCount()
+    }
+});
+
+
+function renderInterview() {
+    filterSection.innerHTML = ''
+
+    for (let job of interviewList) {
+        let div = document.createElement('div');
+        div.className = 'job-card bg-white border border-gray-300 rounded-xl p-5 flex justify-between';
+        div.innerHTML = `
+            <!-- main part 1 -->
+            <div>
+                <h3 class="companyName text-xl font-semibold text-[#002C5C]">
+                    ${job.companyName}
+                </h3>
+                <p class="position text-[#64748B] text-base font-medium">
+                    ${job.position}
+                </p>
+
+                <p class="location-type-salary mt-4 text-[#64748B] text-base font-normal">
+                    <span class="location">${job.location}</span>
+                    •
+                    <span class="type">${job.type}</span>
+                    •
+                    <span class="salary">${job.salary}</span>
+                </p>
+
+                <p class="job-status text-white text-base font-medium bg-green-500 w-[130px] rounded-xl py-2 text-center mt-4">
+                    ${job.status}
+                </p>
+                <p class="job-description mt-3">
+                    ${job.description}
+                </p>
+
+                <div class="space-x-2 mt-5">
+                    <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                    <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
+                </div>
+            </div>
+
+            <!-- main part 2 -->
+            <button class="btn btn-circle text-xl">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        `;
+
+        filterSection.appendChild(div);
+    }
+}
+
+function renderRejected() {
+    filterSection.innerHTML = ''
+
+    for (let job of rejectedList) {
+        let div = document.createElement('div');
+        div.className = 'job-card bg-white border border-gray-300 rounded-xl p-5 flex justify-between';
+        div.innerHTML = `
+            <!-- main part 1 -->
+            <div>
+                <h3 class="companyName text-xl font-semibold text-[#002C5C]">
+                    ${job.companyName}
+                </h3>
+                <p class="position text-[#64748B] text-base font-medium">
+                    ${job.position}
+                </p>
+
+                <p class="location-type-salary mt-4 text-[#64748B] text-base font-normal">
+                    <span class="location">${job.location}</span>
+                    •
+                    <span class="type">${job.type}</span>
+                    •
+                    <span class="salary">${job.salary}</span>
+                </p>
+                
+                <p class="job-status text-white text-base font-medium bg-red-500 w-[110px] rounded-xl py-2 text-center mt-4">
+                    ${job.status}
+                </p>
+                <p class="job-description mt-3">
+                    ${job.description}
+                </p>
+
+                <div class="space-x-2 mt-5">
+                    <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+                    <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
+                </div>
+            </div>
+
+            <!-- main part 2 -->
+            <button class="btn btn-circle text-xl">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        `;
+
+        filterSection.appendChild(div);
+    }
+}
